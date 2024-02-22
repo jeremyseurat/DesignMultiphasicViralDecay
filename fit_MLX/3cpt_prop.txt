@@ -1,0 +1,13 @@
+DESCRIPTION:
+The administration is via a bolus.
+The PK model has 3 compartments and a linear elimination 
+
+[LONGITUDINAL]
+input = {alpha, beta,gam, V0, B, C}
+
+EQUATION:
+A = 1 - (B+C)
+Cc = V0*(A * exp(-alpha*t) + B * exp(-beta*t) + C * exp(-gam*t))
+
+OUTPUT:
+output = Cc

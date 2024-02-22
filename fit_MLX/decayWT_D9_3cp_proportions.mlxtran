@@ -1,0 +1,60 @@
+<DATAFILE>
+
+[FILEINFO]
+file='D9 decay_wt.csv'
+delimiter = semicolon
+header = {Phage, amp_host, amp_time, batch, rep, host, receptor, timepoint, hours, volplated, pfu, titer, status, time}
+
+[CONTENT]
+Phage = {use=identifier}
+titer = {use=observation, name=titer, type=continuous}
+time = {use=time}
+
+<MODEL>
+
+[INDIVIDUAL]
+input = {B_pop, alpha_pop, beta_pop, C_pop, gam_pop, V0_pop}
+
+DEFINITION:
+B = {distribution=logNormal, typical=B_pop, no-variability}
+alpha = {distribution=logNormal, typical=alpha_pop, no-variability}
+beta = {distribution=logNormal, typical=beta_pop, no-variability}
+C = {distribution=logNormal, typical=C_pop, no-variability}
+gam = {distribution=logNormal, typical=gam_pop, no-variability}
+V0 = {distribution=logNormal, typical=V0_pop, no-variability}
+
+[LONGITUDINAL]
+input = {b}
+
+file = '3cpt_prop.txt'
+
+DEFINITION:
+titer = {distribution=normal, prediction=Cc, errorModel=proportional(b)}
+
+<FIT>
+data = titer
+model = titer
+
+<PARAMETER>
+B_pop = {value=0.3, method=MLE}
+C_pop = {value=0.06, method=MLE}
+V0_pop = {value=60000, method=MLE}
+alpha_pop = {value=4, method=MLE}
+b = {value=0.3, method=MLE}
+beta_pop = {value=2, method=MLE}
+c = {value=1, method=FIXED}
+gam_pop = {value=0.17, method=MLE}
+
+<MONOLIX>
+
+[TASKS]
+populationParameters()
+individualParameters(method = {conditionalMean, conditionalMode })
+fim(method = Linearization)
+logLikelihood(method = Linearization)
+plotResult(method = {indfits, parameterdistribution, covariancemodeldiagnosis, covariatemodeldiagnosis, obspred, vpc, residualsscatter, residualsdistribution, randomeffects, saemresults })
+
+[SETTINGS]
+GLOBAL:
+exportpath = 'decayWT_D9_3cp_proportions'
+
