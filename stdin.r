@@ -10,15 +10,12 @@ project<-"viraldecay"
 
 #Name of the file containing the PK or PD model
 #----------------------------------------------
-file.model<-"model_2cp_Macro.R"
+file.model<-"model_2cp_Macro_bis.R"
 
 #Name of the output file for the results and for the Fisher information matrix
 #---------------------------------------
-output<-output_file
-# output<-'stdout.r'
-
-outputFIM<-output_FIM
-# outputFIM<-'FIM.txt'
+output<-"Stdout_dryad_D_9pts_2cp_opt.r";
+outputFIM<-"FIM_dryad_D_9pts_2cp_opt.txt";
 
 #FIM: Population (P) or Individual (I) or Bayesian (B) Fisher information matrix
 #---------------------------------------
@@ -32,7 +29,7 @@ previous.FIM<-""
 
 #RUN:  Evaluation (EVAL) or Optimisation (OPT)
 #-------------------------------------------------------
-run<-PFIM_EvalOrOpt
+run<-"OPT"
 
 #To display only  graphs of models and/or sensitivity functions before computing the Fisher Information matrix
 graph.only<-F
@@ -64,7 +61,7 @@ dose.identical<-T
 # If 'Yes', enter the value of the dose,
 # else, enter the vector of the dose values for each elementary design
 #--------------------------------------------------------------------
-dose<-c(1e6)
+dose<-c(1)
 
 #Vector of the times intervals of each expression
 #-----------------------------------------------------------
@@ -75,7 +72,7 @@ boundA<-list(c(0,Inf))
 #If 'No', specify the object "form" which is a vector of expressions in the model file
 #-----------------------------------------------------------
 NUM<-T
-
+# NUM<-F if DE?
 ###### END ANALYTICAL MODEL OPTION ########################
 
 
@@ -96,7 +93,7 @@ condinit.identical<-T
 # If initial values depend on the parameters to be estimated,
 # enter this parameter into the expression without any quotation marks
 #---------------------------------------------------------
-condinit<-expression(c(0,0))
+condinit<-expression(c(V0))
 
 # Error tolerance for solving differential equations
 #----------------------------------------------------
@@ -111,12 +108,11 @@ Hmax<-Inf
 
 #Name of the fixed effects parameters
 #-------------------------------------
-parameters<-c("V1_0","c_V1","V2_0","c_V2")
+parameters<-c("A","alpha","B","beta")
 
 #Fixed effects parameters values
 #-------------------------------
-beta<-parameter_values
-# beta<-c(0.50, 0.06, 0.50, 0.2)
+beta<-c(6460,0.18,31540,39)
 
 #Some parameters may not be estimated (not estimated = T, estimated = F)
 #--------------------------------
@@ -148,8 +144,8 @@ sig.slopeA<-0.1
 #You can specify that a group has no sampling time by writing NULL
 #(ONLY if you have several response)
 #-----------------------------------------------------------------
-protA<-list(initial_design)
-# protA<-list(c(1,4,15,28,45))
+protA<-list(c( 0.00 ,0.04, 0.12 ,0.17, 0.33,0.67, 1,2,3))
+# protA<-list(c(0,0.2,0.4,0.64,0.88,1.12,1.36,1<.48,1.7,2))
 
 
 #Vector of initial proportions or numbers of subjects for each elementary design
@@ -223,7 +219,7 @@ covariate_occ.category<-list(  Treat=c("A","B") )
 #Sequences of values of covariates at each occasion 
 #Specify as many values in each sequence as number of occasions (n_occ) for each covariate
 #-------------------------------------------------------------------------------------------------------
- 
+
 covariate_occ.sequence<-list(  Treat=list(c("A","B"),c("B","A"))  )
 
 #Proportions of elementary designs corresponding to each sequence of covariate values
@@ -290,7 +286,7 @@ identical.times<-T
 #	"SIMP" for the Simplex algorithm
 #------------------------------------------
 
-algo.option<-"SIMP"
+algo.option<-"FW"
 
 
 ########################
@@ -300,14 +296,14 @@ algo.option<-"SIMP"
 #Optimisation of the proportions of subjects: (Yes=T, No=F)
 #--------------------------------------------------------------
 
-subjects.opt<-F
+subjects.opt<-T
 
 #Vector of lower and upper admissible sampling times
 #---------------------------------------------------
 
 
 lowerA<-c(0) 
-upperA<-c(upper_sampling_time)
+upperA<-c(3)
 
 #lowerB<-c(0)
 #upperB<-c(24)
@@ -315,12 +311,12 @@ upperA<-c(upper_sampling_time)
 #Minimum delay between two sampling times
 #-------------------------------------------
 
-delta.time<-1
+delta.time<-0.04
 
 #Print iteration step (Yes=T, No=F)
 #---------------------------------
 
-iter.print<-F
+iter.print<-T
 
 
 #Parameter for initial simplex building (%)
@@ -349,39 +345,40 @@ Rctol<-1e-6
 #Number of sampling windows
 #--------------------------
 nwindA<-1
-nwindB<-1
+# nwindB<-1
 
 
 #List of vector of the allowed sampling times for each sampling window
 #--------------------------------------------------------------------
 
-sampwinA<-list(c(0,2,4,6,8,10,12,14,16,18,20,22,24,27,30,35,40,50,60))
-sampwinB<-list(c(0, 0.5, 1, 2, 6, 9, 12, 24, 36, 48, 72, 96, 120))
+sampwinA<-list(c(0, 0.04, 0.08, 0.12, 0.17, 0.21, 0.25, 0.29,
+                 0.33, 0.67, 0.71, 0.75, 0.79, 0.83, 0.88, 0.92, 0.96, 1, 2, 3))
+# sampwinB<-list(c(0, 0.5, 1, 2, 6, 9, 12, 24, 36, 48, 72, 96, 120))
 
 
 #Fixed times (times which will be in all evaluated protocols, corresponding to fixed constraints)
 #--------------------------------------------------------------------
-fixed.timesA<-c(0)
-fixed.timesB<-c()
+fixed.timesA<-c(0,1,2,3)
+# fixed.timesB<-c()
 
 
 #List of vector of allowed number of points to be taken from each sampling window
 #------------------------------------------------------------------------------
 
-nsampA<-list(c(5))
-nsampB<-list(c(5))
+nsampA<-list(c(9))
+# nsampB<-list(c(5))
 
 #Maximum total number of sampling times per subject
 #--------------------------------------------------
 
-nmaxptsA<-5
-nmaxptsB<-5
+nmaxptsA<-9
+# nmaxptsB<-5
 
 #Minimum total number of sampling times per subject
 #--------------------------------------------------
 
-nminptsA<-5
-nminptsB<-5
+nminptsA<-9
+# nminptsB<-5
 ############# END OF OPTIMISATION ALGORITHM OPTION ###############
 
 
@@ -393,7 +390,7 @@ nminptsB<-5
 
 #graphical representation of the model (Yes=T, No=F)
 #-------------------------------------
-graph.logical<-F
+graph.logical<-T
 
 #graphical representation of sensitivity functions (Yes=T, No=F)
 #-------------------------------------
@@ -402,11 +399,11 @@ graphsensi.logical<-F
 
 #Vector of Names on X axes for each response
 #---------------------------------
-names.datax<-c("Time (d)")
+names.datax<-c("Time")
 
 #Vector of Names on Y axes for each response
 #---------------------------------
-names.datay<-c("Viral density (PFU/mL)")
+names.datay<-c("V")
 
 #Controls logarithmic axes for the graphical representation of the model
 #Values "xy", "x", or "y" produce log-log or log-x or log-y axes.
@@ -418,7 +415,7 @@ log.logical<-'y'
 #Vector of lower and upper sampling times for the graphical representations
 #-------------------------------------------------------------------------
 graph.infA<-c(0)
-graph.supA<-upperA
+graph.supA<-c(3)
 
 #Vector of lower and upper concentration for the graphical representations
 #------------------------------------------------------------------------
