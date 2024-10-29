@@ -21,6 +21,15 @@ source("C:/.../PFIM.r")
 OR
 ParamUncertainty_cV1-cV2-V_0-7times_PFIM-FW for robust design optimization
 
+#Supplementary files: model influence on design optimization (subfolder ModelChoiceInfluencesDesign)#
+Stdout files are the output of the presented design optimization with the two models (biphasic and self-neutralizing)
+
+To run your own design optimization/model:
+1 - Download stdin and model files 
+2 - Follow steps 1 to 4 above
+3 - Modify and save your stdin and model files
+4 - Run >PFIM() in the R console
+
 ###Data fitting###
 Download Monolix at https://lixoft.com/products/monolix/, ask lixoft for a license (free for academics), monolix scripts (.mlxtran) are available for biexponential (decayWT_D9_2cp_proportions.mlxtran) and triexponential (decayWT_D9_3cp_proportions.mlxtran) models.
 
